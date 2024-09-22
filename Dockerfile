@@ -7,6 +7,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm ci
+RUN npm audit fix
 
 FROM base as builder
 
@@ -27,7 +28,7 @@ WORKDIR /app
 COPY --from=deps --chown=app:node /app/package.json ./
 COPY --from=deps --chown=app:node /app/node_modules ./
 COPY --from=deps --chown=app:node /app/prisma ./
-COPY --from=deps --chown=app:node /app/build ./
+COPY --from=builder --chown=app:node /app/build ./
 
 EXPOSE 3000
 
