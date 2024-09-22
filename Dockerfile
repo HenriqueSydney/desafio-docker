@@ -14,9 +14,12 @@ WORKDIR /app
 
 COPY --from=deps --chown=app:node /app/package.json ./
 COPY --from=deps --chown=app:node /app/package-lock.json ./
-COPY --from=deps --chown=app:node /app/node_modules ./
-COPY --from=deps --chown=app:node /app/prisma ./
-COPY --from=deps --chown=app:node /app/src ./
+COPY --from=deps --chown=app:node /app/tsconfig.json ./
+COPY --from=deps --chown=app:node /app/node_modules ./node_modules
+COPY --from=deps --chown=app:node /app/prisma ./prisma
+COPY --from=deps --chown=app:node /app/src ./src
+
+RUN npm install
 
 RUN npm run build
 
