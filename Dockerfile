@@ -7,7 +7,6 @@ WORKDIR /app
 COPY . .
 
 RUN npm ci
-RUN npm audit fix
 
 FROM base as builder
 
