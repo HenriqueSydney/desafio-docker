@@ -47,12 +47,26 @@ jobs:
 
 
       - name: Build docker image
+        id: build-docker-image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry}}
           TAG: ${{ steps.generate_tag.outputs.sha }}
         run: |
           docker build -t $REGISTRY/henrique-lima-ci:$TAG .
           docker push $REGISTRY/henrique-lima-ci:$TAG
+          IMAGE=$(echo $REGISTRY/henrique-lima-ci:$TAG)
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+      
+      - name: Deploy to App Runner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: henriquelima-api
+          image: ${{ steps.build-docker-image.outputs.image }}
+          access-role-arn: arn:aws:iam::585445949187:role/app-runner-role
+          region: us-east-2
+          cpu: 1
+          memory: 1
+          port: 3000
 
       # - name: Push image
       #   run: docker push henriquelimadev/rocketseat-ci-api:${{ steps.generate_tag.outputs.sha }}
