@@ -1,6 +1,6 @@
-FROM node:20-alpine as base
+FROM node:20-alpine AS base
 
-FROM base as deps
+FROM base AS deps
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY . .
 
 RUN npm ci
 
-FROM base as builder
+FROM base AS builder
 
 WORKDIR /app
 
@@ -23,14 +23,14 @@ RUN npm install
 
 RUN npm run build
 
-FROM base as runner
+FROM base AS runner
 
 WORKDIR /app
 
 COPY --from=deps --chown=app:node /app/package.json ./
-COPY --from=deps --chown=app:node /app/node_modules ./
-COPY --from=deps --chown=app:node /app/prisma ./
-COPY --from=builder --chown=app:node /app/build ./
+COPY --from=deps --chown=app:node /app/node_modules ./node_modules
+COPY --from=deps --chown=app:node /app/prisma ./prisma
+COPY --from=builder --chown=app:node /app/build ./build
 
 EXPOSE 3000
 
