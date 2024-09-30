@@ -39,7 +39,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::585445949187:role/ecr_role
-          aws-region: use-east-1
+          aws-region: use-east-2
 
       - name: Login into AWS Container Register (ECR)
         id: login-ecr
